@@ -1,0 +1,6 @@
+openai==0.28
+slack-bolt
+slack-sdk==3.12.0
+slack-sdk[routers.aiohttp]==3.12.0
+aiohttp==3.7.4
+Flask
