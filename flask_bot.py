@@ -19,6 +19,10 @@ def hello_world():
 @app.route("/slack/events", methods=["POST"])
 def slack_events():
     data = request.json
+
+    if 'challenge' in data:
+        return data['challenge']
+
     event_type = data["event"]["type"]
 
     if event_type == "app_mention":
