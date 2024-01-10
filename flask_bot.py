@@ -69,4 +69,4 @@ def send_slack_message(response):
     requests.post(slack_url, headers=headers, json=payload)
 
 if __name__ == "__main__":
-    app.run(port=5000)  # Replace with your desired port
+    app.run()  # Replace with your desired port
