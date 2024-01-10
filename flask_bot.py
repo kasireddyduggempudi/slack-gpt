@@ -26,7 +26,7 @@ def slack_events():
     event_type = data["event"]["type"]
 
     if event_type == "app_mention":
-        thread_ts = data["event"]["thread_ts"]
+        thread_ts = data["event"]["event_ts"]
         user_message = str(data["event"]["text"]).split(">")[1]
 
         # Retrieve conversation history for the thread
