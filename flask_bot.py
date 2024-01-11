@@ -62,7 +62,7 @@ def slack_events():
     if 'challenge' in data:
         return data['challenge']
     
-    background_thread = threading.Thread(target=do_process_and_send_to_slack_in_background)
+    background_thread = threading.Thread(target=do_process_and_send_to_slack_in_background, args=(data,))
     background_thread.start()
 
 
