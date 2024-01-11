@@ -10,6 +10,7 @@ import requests
 
 SLACK_BOT_TOKEN = os.environ.get("SLACK_BOT_TOEKN")
 OPENAI_API_KEY = os.environ.get("OPEN_API_KEY")
+CHAT_BOT_END_POINT = os.environ.get("CHAT_BOT_END_POINT")
 
 
 app = Flask(__name__)
@@ -38,27 +39,8 @@ def slack_events():
         # Retrieve conversation history for the thread
         history = conversation_history.get(thread_ts, [])
 
-        # Create prompt for ChatGPT
-        prompt = " ".join([f"In thread {thread_ts}, user said: {message}." for message in history])
-        prompt += f" Generate a response: {user_message}"
-
-        # Let the user know that the bot is working on the request
-        response = {"channel": data["event"]["channel"], "text": f"Hello from your bot! :robot_face:\nThanks for your request, I'm on it!"}
-        send_slack_message(response)
-
-        # Check ChatGPT
-        openai.api_key = OPENAI_API_KEY
-        response_text = openai.Completion.create(
-            engine="gpt-3.5-turbo-instruct",
-            prompt=prompt,
-            max_tokens=1024,
-            n=1,
-            stop=None,
-            temperature=0.5
-        ).choices[0].text.strip()
-
-        # Update conversation history with the new message
-        conversation_history[thread_ts] = history + [user_message]
+        response_text = requests.get(f"{CHAT_BOT_END_POINT}/{user_message}").text
+        print(response_text)
 
         # Reply to the thread
         response = {"channel": data["event"]["channel"], "thread_ts": thread_ts, "text": f"Here you go:\n{response_text}"}
