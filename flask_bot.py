@@ -42,8 +42,18 @@ def slack_events():
         response_text = requests.get(f"{CHAT_BOT_END_POINT}/{user_message}").text
         print(response_text)
 
+        blocks = [
+            {
+                "type": "section",
+                "text": {
+                    "type": "mrkdwn",
+                    "text": f"Here you go:\n{response_text}"
+                }
+            }
+        ]
+
         # Reply to the thread
-        response = {"channel": data["event"]["channel"], "thread_ts": thread_ts, "text": f"Here you go:\n{response_text}"}
+        response = {"channel": data["event"]["channel"], "thread_ts": thread_ts, "blocks": blocks}
         send_slack_message(response)
 
     return jsonify({"status": "success"}), 200
