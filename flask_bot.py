@@ -79,7 +79,7 @@ def send_slack_message(response):
     # For example:
     slack_url = "https://slack.com/api/chat.postMessage"
     headers = {"Content-Type": "application/json", "Authorization": f"Bearer {SLACK_BOT_TOKEN}"}
-    payload = {"channel": response["channel"], "thread_ts": response.get("thread_ts", ""), "text": response["text"]}
+    payload = {"channel": response["channel"], "thread_ts": response.get("thread_ts", ""), "blocks": response["blocks"]}
     
     print(payload)
     response = requests.post(slack_url, headers=headers, json=payload)
