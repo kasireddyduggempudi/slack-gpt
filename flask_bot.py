@@ -23,6 +23,8 @@ def hello_world():
 def slack_events():
     data = request.json
 
+    print(data)
+
     if 'challenge' in data:
         return data['challenge']
 
