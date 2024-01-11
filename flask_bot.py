@@ -7,6 +7,8 @@ import os
 import openai
 from flask import Flask, request, jsonify
 import requests
+import threading
+
 
 SLACK_BOT_TOKEN = os.environ.get("SLACK_BOT_TOEKN")
 OPENAI_API_KEY = os.environ.get("OPEN_API_KEY")
@@ -21,14 +23,8 @@ conversation_history = {}
 def hello_world():
     return "Hi world!!"
 
-@app.route("/slack/events", methods=["POST"])
-def slack_events():
-    data = request.json
-
-    print(data)
-
-    if 'challenge' in data:
-        return data['challenge']
+def do_process_and_send_to_slack_in_background(data):
+    print("background-task")
 
     event_type = data["event"]["type"]
 
@@ -55,6 +51,20 @@ def slack_events():
         # Reply to the thread
         response = {"channel": data["event"]["channel"], "thread_ts": thread_ts, "blocks": blocks}
         send_slack_message(response)
+
+
+@app.route("/slack/events", methods=["POST"])
+def slack_events():
+    data = request.json
+
+    print(data)
+
+    if 'challenge' in data:
+        return data['challenge']
+    
+    background_thread = threading.Thread(target=do_process_and_send_to_slack_in_background)
+    background_thread.start()
+
 
     return jsonify({"status": "success"}), 200
 
